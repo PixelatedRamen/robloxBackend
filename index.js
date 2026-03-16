@@ -1,7 +1,7 @@
+const express = require("express");
 const fetch = require("node-fetch");
 
 const app = express();
-
 // Example endpoint:
 // https://your-backend.onrender.com/getPlayerCount?gameId=123456
 
