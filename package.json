@@ -1,7 +1,7 @@
 {
   "name": "roblox-backend",
   "version": "1.0.0",
-  "description": "Roblox API backend",
+  "description": "Roblox player count API",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
