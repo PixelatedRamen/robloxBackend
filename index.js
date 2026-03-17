@@ -2,35 +2,34 @@ const express = require("express");
 const fetch = require("node-fetch");
 
 const app = express();
-// Example endpoint:
-// https://your-backend.onrender.com/getPlayerCount?gameId=123456
 
 app.get("/getPlayerCount", async (req, res) => {
-    const gameId = req.query.gameId;
+  const placeId = req.query.gameId;
 
-    if (!gameId) {
-        return res.status(400).json({ error: "No gameId provided" });
-    }
+  try {
+    // STEP 1: Convert Place ID → Universe ID
+    const universeRes = await fetch(`https://apis.roblox.com/universes/v1/places/${placeId}/universe`);
+    const universeData = await universeRes.json();
 
-    try {
-        const response = await fetch(`https://games.roblox.com/v1/games?universeIds=${gameId}`);
-        const data = await response.json();
+    const universeId = universeData.universeId;
 
-        const game = data.data[0];
+    // STEP 2: Get game data using Universe ID
+    const gameRes = await fetch(`https://games.roblox.com/v1/games?universeIds=${universeId}`);
+    const gameData = await gameRes.json();
 
-        res.json({
-            playing: game.playing,
-            visits: game.visits,
-            maxPlayers: game.maxPlayers
-        });
+    const game = gameData.data[0];
 
-    } catch (error) {
-        res.status(500).json({ error: "Failed to fetch Roblox data" });
-    }
+    res.json({
+      playing: game.playing,
+      visits: game.visits,
+      maxPlayers: game.maxPlayers
+    });
+
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch data" });
+  }
 });
 
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
-    console.log("Server running on port " + PORT);
+app.listen(10000, () => {
+  console.log("Server running on port 10000");
 });
